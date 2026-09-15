@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo - Familia de Papel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        famiCyan: '#009fe3',
+                        famiMagenta: '#e3007b',
+                        famiYellow: '#ffed00',
+                        darkBg: '#050505',
+                        darkCard: '#0a0a0a',
+                        darkBorder: '#1f2937'
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #000000;
+            color: #d1d5db;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+
+        /* Configuración de la página (Tamaño A4) */
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        /* Reglas estrictas para la impresión a PDF */
+        @media print {
+
+            html,
+            body {
+                background-color: #000000 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100%;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            .page-break-before {
+                page-break-before: always;
+            }
+
+            .avoid-break-inside {
+                page-break-inside: avoid;
+            }
+
+            .page-container {
+                box-shadow: none !important;
+                padding: 15mm !important;
+                margin: 0 auto !important;
+                max-width: 100% !important;
+                background-color: #000000 !important;
+            }
+
+            /* REGLA ESTRICTA DE 2 COLUMNAS PARA EL PDF */
+            .print-2-cols {
+                display: grid !important;
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                gap: 1.5rem !important;
+            }
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+
+        /* Contenedor principal: Ampliado para la web */
+        .page-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #000000;
+            color: #ffffff;
+            padding: 2rem 1.5rem;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.9);
+            min-height: 100vh;
+        }
+
+        /* DISEÑO MODERNO DE CARDS */
+        .product-card {
+            background-color: #0a0a0a;
+            border: 1px solid #1f2937;
+            border-radius: 1rem;
+            overflow: hidden;
+            text-align: center;
+            box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+
+        /* Hover interactivo y moderno (Se desactiva en móviles y al imprimir) */
+        @media (hover: hover) {
+            .product-card:not(.hover-disabled):hover {
+                transform: translateY(-6px);
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.7);
+                border-color: #374151;
+            }
+
+            .hover-cyan:hover {
+                border-color: #009fe3;
+                box-shadow: 0 15px 30px -10px rgba(0, 159, 227, 0.2);
+            }
+
+            .hover-magenta:hover {
+                border-color: #e3007b;
+                box-shadow: 0 15px 30px -10px rgba(227, 0, 123, 0.2);
+            }
+
+            .hover-yellow:hover {
+                border-color: #ffed00;
+                box-shadow: 0 15px 30px -10px rgba(255, 237, 0, 0.15);
+            }
+        }
+
+        .product-img-container {
+            width: 100%;
+            height: 260px;
+            background: linear-gradient(145deg, #111827, #0a0a0a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #1f2937;
+            position: relative;
+        }
+
+        .product-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Selectores de color visuales */
+        .color-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            display: inline-block;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            margin: 0 3px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Etiquetas visuales modernas */
+        .badge-modern {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            background-color: rgba(31, 41, 55, 0.7);
+            border: 1px solid #374151;
+            color: #d1d5db;
+            font-size: 0.7rem;
+            padding: 0.25rem 0.7rem;
+            border-radius: 9999px;
+            font-weight: 500;
+            backdrop-filter: blur(4px);
+        }
+    </style>
+</head>
+
+<body class="sm:p-4 bg-[#0a0a0a]">
+
+    <!-- BARRA DE BÚSQUEDA FLOTANTE (Glassmorphism) -->
+    <div class="sticky top-0 z-50 py-4 no-print bg-black/80 backdrop-blur-md border-b border-gray-800 shadow-xl">
+        <div class="max-w-[1200px] mx-auto px-4 relative flex flex-col sm:flex-row items-center justify-between gap-4">
+
+            <!-- Input de búsqueda -->
+            <div class="relative w-full sm:w-2/3 lg:w-1/2">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+                <input type="text" id="searchInput" placeholder="Busca por producto (ej. Taza mágica, Termo)..."
+                    class="w-full bg-[#111] border border-gray-700 text-white rounded-full py-2.5 pl-11 pr-4 focus:outline-none focus:ring-2 focus:ring-famiCyan focus:border-transparent transition-all shadow-inner text-sm placeholder-gray-500">
+            </div>
+
+            <!-- Botón PDF Modernizado -->
+            <button onclick="window.print()"
+                class="w-full sm:w-auto bg-famiMagenta text-white px-6 py-2.5 rounded-full font-bold shadow-[0_0_15px_rgba(227,0,123,0.4)] hover:bg-pink-700 hover:shadow-[0_0_25px_rgba(227,0,123,0.6)] transition-all duration-300 text-sm flex items-center justify-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z">
+                    </path>
+                </svg>
+                Imprimir / PDF
+            </button>
+        </div>
+    </div>
+
+    <!-- SCRIPT DEL BUSCADOR EN TIEMPO REAL -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('searchInput');
+            const sections = document.querySelectorAll('.product-section');
+
+            searchInput.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase().trim();
+
+                sections.forEach(section => {
+                    const cards = section.querySelectorAll('.product-card');
+                    let visibleCount = 0;
+
+                    cards.forEach(card => {
+                        const title = card.querySelector('h3');
+                        if (title) {
+                            const text = title.textContent.toLowerCase();
+                            // Mostrar si coincide el texto, ocultar si no
+                            if (text.includes(term)) {
+                                card.style.display = '';
+                                visibleCount++;
+                            } else {
+                                card.style.display = 'none';
+                            }
+                        }
+                    });
+
+                    // Ocultar toda la sección si ningún producto coincide
+                    if (term !== '' && visibleCount === 0) {
+                        section.style.display = 'none';
+                    } else {
+                        section.style.display = '';
+                    }
+                });
+            });
+        });
+    </script>
+
+    <div class="page-container rounded-none sm:rounded-2xl mt-0 sm:mt-6 border border-gray-900">
+
+        <!-- ==========================================
+             PORTADA DEL CATÁLOGO
+             ========================================== -->
+        <header class="text-center pb-8 mb-10 border-b-8 border-famiYellow">
+            <img data-src="logoFamiPapelHor.png" data-local-src="img/logoFamiPapelHor.png" alt="Logo Familia de Papel"
+                class="mx-auto mb-6 max-h-40 object-contain" loading="lazy">
+
+            <h1 class="text-3xl font-extrabold uppercase tracking-wide" style="color: yellow;">
+                Catálogo de Productos
+            </h1>
+            <p class="text-lg text-famiCyan font-semibold mt-1">Precios y Modelos</p>
+
+            <div class="mt-4 text-sm text-gray-400 flex justify-center gap-6 font-medium">
+                <p>📱 477 812 4210</p>
+                <p>📸 @familia_de_papel_r</p>
+            </div>
+            <div class="mt-4 text-sm text-gray-400 flex justify-center gap-6 font-medium">
+                <p>Es posible que algunos productos no sean 100% idénticos a las imágenes.</p>
+            </div>
+        </header>
+
+        <!-- ==========================================
+             SECCIÓN: TAZAS
+             ========================================== -->
+        <section class="mb-12 avoid-break-inside product-section">
+            <div class="bg-famiCyan text-white px-5 py-3 rounded-t-xl">
+                <h2 class="text-2xl font-bold uppercase tracking-wider">Tazas</h2>
+            </div>
+
+            <div class="bg-[#0a0a0a] border-2 border-t-0 border-famiCyan p-5 sm:p-6 rounded-b-xl shadow-xl">
+                <p class="text-sm text-gray-400 mb-6">Calidad fotográfica superior y recubrimiento AAA de alta duración.
+                </p>
+
+                <!-- GRID: Hasta 4 columnas en Web, estrictamente 2 en PDF -->
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 print-2-cols">
+
+                    <div class="product-card hover-cyan cursor-pointer" onclick="openModal('taza-blanca-11oz')">
+                        <div class="product-img-container">
+                            <img data-src="mockupTazaIIPadreFlork1.png"
+                                data-local-src="img/tazas/mockupTazaIIPadreFlork1.png" alt="Taza Blanca 11oz"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Taza Blanca 11 Oz</h3>
+                            <p class="text-xs text-gray-500 mb-3 flex-grow">Calidad AAA o AA, la más clásica e ideal
+                                para cualquier diseño.</p>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiMagenta text-xl">$90.00 - $94.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-cyan cursor-pointer" onclick="openModal('taza-color')">
+                        <div class="product-img-container">
+                            <img data-src="mockupTazaIIMinionsIntAzulRojo.png"
+                                data-local-src="img/tazas/mockupTazaIIMinionsIntAzulRojo.png" alt="Taza Color"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Taza con Color Interior 11 y 15 (oz)</h3>
+                            <p class="text-xs text-gray-500 mb-3">Dale un toque extra combinando el interior con tu
+                                diseño.</p>
+
+                            <div class="mb-3 space-y-2">
+                                <div class="flex justify-center flex-wrap gap-1">
+                                    <span class="color-dot bg-green-500"></span><span
+                                        class="color-dot bg-red-600"></span><span
+                                        class="color-dot bg-blue-500"></span><span
+                                        class="color-dot bg-pink-400"></span><span
+                                        class="color-dot bg-yellow-400"></span><span
+                                        class="color-dot bg-red-900"></span><span class="color-dot bg-black"></span>
+                                </div>
+                                <div class="flex justify-center gap-2 mt-1 flex-wrap">
+                                    <span class="badge-modern">🥄 Con cuchara</span>
+                                    <span class="badge-modern">☕ Sin cuchara</span>
+                                </div>
+                            </div>
+
+                            <div class="mt-auto pt-4 border-t border-gray-800/50 space-y-1">
+                                <p class="font-bold text-famiMagenta text-xl">$114.00 - $137.00</p>
+                                <p class="text-sm font-semibold text-gray-400">$124.00 <span
+                                        class="text-xs font-normal">(con cuchara 11oz)</span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-cyan cursor-pointer" onclick="openModal('taza-magica-mate')">
+                        <div class="product-img-container">
+                            <img data-src="mockupTazaIIDiaMadres11OzMagMateAzul.png"
+                                data-local-src="img/tazas/mockupTazaIIDiaMadres11OzMagMateAzul.png"
+                                alt="Taza Mágica Mate" class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Taza Mágica Mate 11oz</h3>
+                            <p class="text-xs text-gray-500 mb-3">El diseño aparece mágicamente al verter agua caliente.
+                            </p>
+                            <div class="flex justify-center mb-3">
+                                <span class="color-dot bg-gray-900"></span><span
+                                    class="color-dot bg-red-600"></span><span class="color-dot bg-blue-800"></span>
+                            </div>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiMagenta text-xl">$120.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-cyan cursor-pointer" onclick="openModal('taza-magica-semi')">
+                        <div class="product-img-container">
+                            <img data-src="mockupTazaIIJack11OzMagSemiBrill.png"
+                                data-local-src="img/tazas/mockupTazaIIJack11OzMagSemiBrill.png"
+                                alt="Taza Mágica Semibrillosa" class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Taza Mágica Semibrillosa 11oz</h3>
+                            <p class="text-xs text-gray-500 mb-3 flex-grow">Acabado liso y elegante. El diseño aparece
+                                con lo caliente.</p>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiMagenta text-xl">$124.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-cyan cursor-pointer" onclick="openModal('taza-magica-color')">
+                        <div class="product-img-container">
+                            <img data-src="mockupTazaIIGokuBlueMagColorInt.png"
+                                data-local-src="img/tazas/mockupTazaIIGokuBlueMagColorInt.png" alt="Taza Mágica Color"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Taza Mágica Mate c/ Color Interior</h3>
+                            <p class="text-xs text-gray-500 mb-3">Doble sorpresa: Mágica por fuera y con color por
+                                dentro.</p>
+                            <div class="flex justify-center mb-3">
+                                <span class="color-dot bg-green-500"></span><span
+                                    class="color-dot bg-red-600"></span><span class="color-dot bg-pink-400"></span>
+                            </div>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiMagenta text-xl">$124.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-cyan cursor-pointer" onclick="openModal('taza-vidrio')">
+                        <div class="product-img-container">
+                            <img data-src="mockupTazaDiaMadFlork3Vidrio.png"
+                                data-local-src="img/tazas/mockupTazaDiaMadFlork3Vidrio.png" alt="Taza Vidrio"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Taza de Vidrio Glaseada</h3>
+                            <p class="text-xs text-gray-500 mb-3">Acabado satinado translúcido muy original.</p>
+                            <div class="flex justify-center flex-wrap gap-1 mb-3">
+                                <span class="color-dot bg-gray-800"></span><span
+                                    class="color-dot bg-pink-400"></span><span
+                                    class="color-dot bg-green-400"></span><span
+                                    class="color-dot bg-blue-400"></span><span class="color-dot bg-gray-100"></span>
+                            </div>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiMagenta text-xl">$114.00 - $115.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-cyan cursor-pointer" onclick="openModal('taza-aluminio')">
+                        <div class="product-img-container">
+                            <img data-src="mockupTazaIICocaAluminio.png"
+                                data-local-src="img/tazas/mockupTazaIICocaAluminio.png" alt="Taza Aluminio"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Taza Acero 12oz</h3>
+                            <p class="text-xs text-gray-500 mb-3 flex-grow">Estilo peltre vintage (Colores: Blanco y
+                                Plata).</p>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiMagenta text-xl">$210.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-cyan cursor-pointer" onclick="openModal('taza-aluminio-asa')">
+                        <div class="product-img-container">
+                            <img data-src="mockupTazaIIBmwAluminioAsaPlast.png"
+                                data-local-src="img/tazas/mockupTazaIIBmwAluminioAsaPlast.png" alt="Taza Aluminio Asa"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Taza Acero 350ml</h3>
+                            <p class="text-xs text-gray-500 mb-3 flex-grow">Con resistente asa de plástico ergonómica.
+                            </p>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiMagenta text-xl">$200.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-cyan cursor-pointer" onclick="openModal('taza-base-redonda')">
+                        <div class="product-img-container">
+                            <img data-src="mockupTazaIINezuco11Oz.png"
+                                data-local-src="img/tazas/mockupTazaIINezuco11Oz.png" alt="Taza Base Redonda"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Taza Blanca 11oz Base Redonda</h3>
+                            <p class="text-xs text-gray-500 mb-3 flex-grow">Diseño curvado y estético.</p>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiMagenta text-xl">$99.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-cyan cursor-pointer" onclick="openModal('taza-glitter')">
+                        <div class="product-img-container">
+                            <img data-src="mockupTazaIIHarryGoldSilver.png"
+                                data-local-src="img/tazas/mockupTazaIIHarryGoldSilver.png" alt="Taza Glitter"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Taza Dorada y Plateada Glitter</h3>
+                            <p class="text-xs text-gray-500 mb-3">Textura de brillos tipo glitter (Escarcha).</p>
+                            <div class="flex justify-center mb-3">
+                                <span class="color-dot bg-yellow-500"></span><span class="color-dot bg-gray-300"></span>
+                            </div>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiMagenta text-xl">$120.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-cyan cursor-pointer" onclick="openModal('taza-espejo')">
+                        <div class="product-img-container">
+                            <img data-src="mockupTazaIIHarry11OzEspejo.png"
+                                data-local-src="img/tazas/mockupTazaIIHarry11OzEspejo.png" alt="Taza Espejo"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Tazas Espejo 11Oz</h3>
+                            <p class="text-xs text-gray-500 mb-3">Acabado metálico reflectante premium.</p>
+                            <div class="flex justify-center flex-wrap gap-1 mb-3">
+                                <span class="color-dot bg-yellow-600"></span><span
+                                    class="color-dot bg-gray-400"></span><span
+                                    class="color-dot bg-blue-500"></span><span class="color-dot bg-pink-300"></span>
+                            </div>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiMagenta text-xl">$130.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-cyan cursor-pointer" onclick="openModal('taza-acero-doble')">
+                        <div class="product-img-container">
+                            <img data-src="mockupTazaIIDbGtAluminioDblPred.png"
+                                data-local-src="img/tazas/mockupTazaIIDbGtAluminioDblPred.png" alt="Taza Doble Pared"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Taza Acero Doble Pared 300ml</h3>
+                            <p class="text-xs text-gray-500 mb-3 flex-grow">Conserva la temperatura (Blanco y Plata).
+                            </p>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiMagenta text-xl">$260.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-cyan cursor-pointer" onclick="openModal('taza-perlada')">
+                        <div class="product-img-container">
+                            <img data-src="mockupTazaIIFma11OzPerlado.png"
+                                data-local-src="img/tazas/mockupTazaIIFma11OzPerlado.png" alt="Taza Perlada"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Tazas Perladas 11Oz</h3>
+                            <p class="text-xs text-gray-500 mb-3">Destellos sutiles tipo perla.</p>
+                            <div class="flex justify-center mb-3">
+                                <span class="color-dot bg-blue-300"></span><span class="color-dot bg-pink-200"></span>
+                            </div>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiMagenta text-xl">$120.00</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BANNER DE OTRAS TAZAS DISPONIBLES -->
+                <div
+                    class="mt-10 bg-gradient-to-r from-gray-900 to-[#050505] border border-gray-800 rounded-2xl p-6 flex flex-col sm:flex-row items-center gap-5 text-left shadow-2xl relative overflow-hidden">
+                    <div class="absolute -right-4 -top-4 w-24 h-24 bg-famiCyan/10 rounded-full blur-2xl"></div>
+                    <div
+                        class="bg-gray-800/80 backdrop-blur-sm border border-gray-700 text-3xl p-4 rounded-xl flex-shrink-0 shadow-lg">
+                        ☕</div>
+                    <div class="relative z-10 w-full">
+                        <h4
+                            class="font-bold text-famiCyan text-sm md:text-base uppercase tracking-widest mb-3 border-b border-gray-800 pb-2">
+                            También disponibles bajo pedido:</h4>
+                        <ul class="text-sm text-gray-400 space-y-2">
+                            <li class="flex items-center gap-2">
+                                <div class="w-1.5 h-1.5 rounded-full bg-gray-500"></div> Tazas de pareja blancas de 11
+                                oz.
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <div class="w-1.5 h-1.5 rounded-full bg-gray-500"></div> Tazas con asa de corazón blanca
+                                y mágica (11 o 10 oz).
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <div class="w-1.5 h-1.5 rounded-full bg-gray-500"></div> Pocillo de peltre, borde de
+                                distintos colores (10oz).
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <div class="w-1.5 h-1.5 rounded-full bg-gray-500"></div> Pocillo de peltre mágico
+                                glitter (10oz).
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             SECCIÓN: TERMOS
+             ========================================== -->
+        <section class="mb-14 avoid-break-inside product-section">
+            <div class="bg-famiMagenta text-white px-5 py-3 rounded-t-xl">
+                <h2 class="text-2xl font-bold uppercase tracking-wider">Termos</h2>
+            </div>
+            <div class="bg-black border-2 border-t-0 border-famiMagenta p-5 sm:p-6 rounded-b-xl shadow-xl">
+                <p class="text-sm text-gray-400 mb-6">Acero inoxidable de doble pared. Conservan la temperatura fría o
+                    caliente.</p>
+
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 print-2-cols">
+                    <div class="product-card hover-magenta cursor-pointer" onclick="openModal('termo-weekend')">
+                        <div class="product-img-container">
+                            <img data-src="mockupTermoWeekendReZero.png"
+                                data-local-src="img/termos/mockupTermoWeekendReZero.png"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Termo Acero Weekend 500ml</h3>
+                            <p class="text-xs text-gray-500 mb-3 flex-grow">Tapa tipo taza, botón dispensador.</p>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiCyan text-xl">$263.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-magenta cursor-pointer" onclick="openModal('termo-corcho')">
+                        <div class="product-img-container">
+                            <img class="w-full h-full object-cover" data-src="termoMario.jpeg"
+                                data-local-src="img/termos/termoMario.jpeg" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Termo Acero con base de corcho</h3>
+                            <p class="text-xs text-gray-500 mb-3 flex-grow">Base de corcho antideslizante y diseño
+                                elegante.</p>
+                            <div class="flex justify-center items-center gap-2 mb-3">
+                                <p class="text-[10px] text-gray-500 uppercase tracking-widest font-semibold m-0">Color:
+                                </p>
+                                <span class="color-dot bg-gray-300"></span><span class="color-dot bg-white"></span>
+                            </div>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiCyan text-xl">$279.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-magenta cursor-pointer" onclick="openModal('termo-skinny')">
+                        <div class="product-img-container">
+                            <img data-src="mockupTermoSkinnySakuraC.png"
+                                data-local-src="img/termos/mockupTermoSkinnySakuraC.png"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Termo Skinny 600ml</h3>
+                            <p class="text-xs text-gray-500 mb-3 flex-grow">Diseño alto y delgado. Incluye tapa
+                                hermética y popote.</p>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiCyan text-xl">$263.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-magenta cursor-pointer" onclick="openModal('termo-viajero')">
+                        <div class="product-img-container">
+                            <img data-src="mockupTermoViajeroHelloKitty.png"
+                                data-local-src="img/termos/mockupTermoViajeroHelloKitty.png"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Termo Viajero 20/30 Oz</h3>
+                            <p class="text-xs text-gray-500 mb-3 flex-grow">Ideal para llevar en el auto, con tapa de
+                                seguridad anti-derrames.</p>
+                            <div class="flex justify-center items-center gap-2 mb-3">
+                                <p class="text-[10px] text-gray-500 uppercase tracking-widest font-semibold m-0">Color:
+                                </p>
+                                <span class="color-dot bg-gray-300"></span><span class="color-dot bg-white"></span>
+                            </div>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiCyan text-xl">$257.00 - $295.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-magenta cursor-pointer" onclick="openModal('termo-recto')">
+                        <div class="product-img-container">
+                            <img data-src="mockupTermoRectoBts.png" data-local-src="img/termos/mockupTermoRectoBts.png"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Termo Recto 450ml</h3>
+                            <p class="text-xs text-gray-500 mb-3 flex-grow">Diseño cilíndrico minimalista, perfecto para
+                                el día a día.</p>
+                            <div class="flex justify-center items-center gap-2 mb-3">
+                                <p class="text-[10px] text-gray-500 uppercase tracking-widest font-semibold m-0">Color:
+                                </p>
+                                <span class="color-dot bg-gray-300"></span><span class="color-dot bg-white"></span>
+                            </div>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiCyan text-xl">$230.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-magenta cursor-pointer" onclick="openModal('termo-lata')">
+                        <div class="product-img-container">
+                            <img data-src="mockupTermoLataHellsing.png"
+                                data-local-src="img/termos/mockupTermoLataHellsing.png"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Termo Lata 280/500ml</h3>
+                            <p class="text-xs text-gray-500 mb-3 flex-grow">Divertida forma de lata de refresco, incluye
+                                popote retráctil.</p>
+                            <div class="flex justify-center items-center gap-2 mb-3">
+                                <p class="text-[10px] text-gray-500 uppercase tracking-widest font-semibold m-0">Color:
+                                </p>
+                                <span class="color-dot bg-gray-300"></span><span class="color-dot bg-white"></span>
+                            </div>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiCyan text-xl">$194.00 - $244.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-magenta cursor-pointer" onclick="openModal('termo-lechera')">
+                        <div class="product-img-container">
+                            <img data-src="mockupBotellaAceroLecheraMorat.png"
+                                data-local-src="img/botellasVasos/mockupBotellaAceroLecheraMorat.png"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Termo Botella Lechera</h3>
+                            <p class="text-xs text-gray-500 mb-3 flex-grow">Estilo vintage de botella de leche con
+                                retención térmica.</p>
+                            <div class="flex justify-center items-center gap-2 mb-3">
+                                <p class="text-[10px] text-gray-500 uppercase tracking-widest font-semibold m-0">Color:
+                                </p>
+                                <span class="color-dot bg-gray-300"></span><span class="color-dot bg-white"></span>
+                            </div>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiCyan text-xl">$287.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-magenta cursor-pointer" onclick="openModal('termo-tarro')">
+                        <div class="product-img-container">
+                            <img data-src="mockupTermoTarroLeon.png"
+                                data-local-src="img/termos/mockupTermoTarroLeon.png" class="w-full h-full object-cover"
+                                loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Termo Tarro 600ml</h3>
+                            <p class="text-xs text-gray-500 mb-3 flex-grow">Todo el estilo de un tarro cervecero pero
+                                térmico, con asa resistente.</p>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiCyan text-xl">$279.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             SECCIÓN: RECIPIENTES (Botellas y Vasos)
+             ========================================== -->
+        <section class="mb-14 avoid-break-inside product-section">
+            <div class="bg-gray-800 text-white px-5 py-3 rounded-t-xl">
+                <h2 class="text-2xl font-bold uppercase tracking-wider text-famiYellow">Botellas y Vasos</h2>
+            </div>
+            <div class="bg-black border-2 border-t-0 border-gray-800 p-5 sm:p-6 rounded-b-xl shadow-xl">
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 print-2-cols">
+
+                    <div class="product-card hover-yellow cursor-pointer" onclick="openModal('botella-bola')">
+                        <div class="product-img-container">
+                            <img data-src="mockupBotellaDeportivaTapaRedNsqk.png"
+                                data-local-src="img/botellasVasos/mockupBotellaDeportivaTapaRedNsqk.png"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Botella Deportiva Aluminio</h3>
+                            <p class="text-xs text-gray-500 mb-2">Tapa Bola</p>
+                            <div class="flex justify-center items-center gap-2 mb-3">
+                                <p class="text-[10px] text-gray-500 uppercase tracking-widest font-semibold m-0">Color:
+                                </p>
+                                <span class="color-dot bg-gray-300"></span><span class="color-dot bg-white"></span>
+                            </div>
+                            <div class="flex justify-center gap-2 mb-3">
+                                <span class="badge-modern">💧 600 ml</span>
+                            </div>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiYellow text-xl">$164.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-yellow cursor-pointer" onclick="openModal('botella-lechera-acero')">
+                        <div class="product-img-container">
+                            <img data-src="mockupBotellaAceroLecheraMorat.png"
+                                data-local-src="img/botellasVasos/mockupBotellaAceroLecheraMorat.png"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Botella Lechera de Acero</h3>
+                            <p class="text-xs text-gray-500 mb-2">Pared sencilla</p>
+                            <div class="flex justify-center items-center gap-2 mb-3">
+                                <p class="text-[10px] text-gray-500 uppercase tracking-widest font-semibold m-0">Color:
+                                </p>
+                                <span class="color-dot bg-gray-300"></span><span class="color-dot bg-white"></span>
+                            </div>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiYellow text-xl">$264.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-yellow cursor-pointer" onclick="openModal('botella-boton')">
+                        <div class="product-img-container">
+                            <img data-src="mockupBotellaDeportivaTapabotonMessi.png"
+                                data-local-src="img/botellasVasos/mockupBotellaDeportivaTapabotonMessi.png"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Botella Deportiva Aluminio</h3>
+                            <p class="text-xs text-gray-500 mb-2">Botón Presionable</p>
+                            <div class="flex justify-center gap-2 mb-3">
+                                <span class="badge-modern">💧 750 ml</span>
+                            </div>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiYellow text-xl">$224.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-yellow cursor-pointer" onclick="openModal('botella-aro')">
+                        <div class="product-img-container">
+                            <img data-src="mockupBotellaAluminioAroColorPokemon.png"
+                                data-local-src="img/botellasVasos/mockupBotellaAluminioAroColorPokemon.png"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Botella Deportiva Aluminio (2)</h3>
+                            <p class="text-xs text-gray-500 mb-2">Aro de Color</p>
+                            <div class="flex justify-center flex-wrap gap-1 mb-2">
+                                <span class="color-dot bg-gray-500"></span><span
+                                    class="color-dot bg-green-400"></span><span
+                                    class="color-dot bg-pink-600"></span><span
+                                    class="color-dot bg-orange-400"></span><span class="color-dot bg-blue-400"></span>
+                            </div>
+                            <div class="flex justify-center items-center gap-2 mb-3">
+                                <p class="text-[10px] text-gray-500 uppercase tracking-widest font-semibold m-0">Color:
+                                </p>
+                                <span class="color-dot bg-gray-300"></span><span class="color-dot bg-white"></span>
+                            </div>
+                            <div class="flex justify-center gap-2 mb-3">
+                                <span class="badge-modern">💧 750 ml</span>
+                            </div>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiYellow text-xl">$239.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-yellow cursor-pointer" onclick="openModal('botella-clasica')">
+                        <div class="product-img-container">
+                            <img data-src="mockupBotellaAluminioRoscaMajinBuu.png"
+                                data-local-src="img/botellasVasos/mockupBotellaAluminioRoscaMajinBuu.png"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Botella Aluminio Clásica</h3>
+                            <p class="text-xs text-gray-500 mb-2">Tapón de rosca clásico</p>
+                            <div class="flex justify-center items-center gap-2 mb-3">
+                                <p class="text-[10px] text-gray-500 uppercase tracking-widest font-semibold m-0">Color:
+                                </p>
+                                <span class="color-dot bg-gray-300"></span><span class="color-dot bg-white"></span>
+                            </div>
+                            <div class="flex justify-center flex-wrap gap-2 mb-4">
+                                <span class="badge-modern">💧 500 ml</span>
+                                <span class="badge-modern">💧 600 ml</span>
+                                <span class="badge-modern">💧 750 ml</span>
+                            </div>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiYellow text-xl">$145.00 - $160.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-yellow cursor-pointer" onclick="openModal('botella-color')">
+                        <div class="product-img-container">
+                            <img data-src="termoJennie.png" data-local-src="img/botellasVasos/termoJennie.png"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Botella Aluminio Color</h3>
+                            <p class="text-xs text-gray-500 mb-3">Tapón de colores removible</p>
+                            <div class="flex justify-center mb-2">
+                                <span class="color-dot bg-green-500"></span><span
+                                    class="color-dot bg-red-600"></span><span class="color-dot bg-blue-500"></span>
+                            </div>
+                            <div class="flex justify-center items-center gap-2 mb-3">
+                                <p class="text-[10px] text-gray-500 uppercase tracking-widest font-semibold m-0">Color:
+                                </p>
+                                <span class="color-dot bg-gray-300"></span><span class="color-dot bg-white"></span>
+                            </div>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiYellow text-xl">$215.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-yellow cursor-pointer" onclick="openModal('botella-caribe')">
+                        <div class="product-img-container">
+                            <img data-src="mockupBotellaDepCaribePokemon2.png"
+                                data-local-src="img/botellasVasos/mockupBotellaDepCaribePokemon2.png"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Botella Aluminio Caribe</h3>
+                            <p class="text-xs text-gray-500 mb-4 flex-grow leading-relaxed">Diseño ergonómico y tapón de
+                                colores muy moderno.</p>
+                            <div class="flex justify-center flex-wrap gap-1 mb-4">
+                                <span class="color-dot bg-gray-500"></span><span
+                                    class="color-dot bg-green-400"></span><span
+                                    class="color-dot bg-pink-400"></span><span
+                                    class="color-dot bg-orange-400"></span><span
+                                    class="color-dot bg-blue-900"></span><span class="color-dot bg-red-600"></span><span
+                                    class="color-dot bg-yellow-300"></span>
+                            </div>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiYellow text-xl">$185.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-yellow cursor-pointer" onclick="openModal('botella-acero-cuello')">
+                        <div class="product-img-container">
+                            <img data-src="mockupBotellaAceroColorArribaPikaEevee.png"
+                                data-local-src="img/botellasVasos/mockupBotellaAceroColorArribaPikaEevee.png"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Botella de Acero</h3>
+                            <p class="text-xs text-gray-500 mb-3">Cuello de plástico de color</p>
+                            <div class="flex justify-center mb-2">
+                                <span class="color-dot bg-gray-600"></span><span
+                                    class="color-dot bg-pink-700"></span><span class="color-dot bg-cyan-300"></span>
+                            </div>
+                            <div class="flex justify-center items-center gap-2 mb-3">
+                                <p class="text-[10px] text-gray-500 uppercase tracking-widest font-semibold m-0">Color:
+                                </p>
+                                <span class="color-dot bg-gray-300"></span><span class="color-dot bg-white"></span>
+                            </div>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiYellow text-xl">$234.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-yellow cursor-pointer" onclick="openModal('lata-aluminio')">
+                        <div class="product-img-container">
+                            <img data-src="mockupLataAluminioBelySkyePaw.png"
+                                data-local-src="img/botellasVasos/mockupLataAluminioBelySkyePaw.png"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Lata Aluminio</h3>
+                            <p class="text-xs text-gray-500 mb-3 leading-relaxed">Lata ligera y resistente para bebidas
+                                frías. Incluye popote.</p>
+                            <div class="flex justify-center items-center gap-2 mb-3">
+                                <p class="text-[10px] text-gray-500 uppercase tracking-widest font-semibold m-0">Color:
+                                </p>
+                                <span class="color-dot bg-gray-300"></span><span class="color-dot bg-white"></span>
+                            </div>
+                            <div class="flex justify-center gap-2 mb-4">
+                                <span class="badge-modern">🥤 350 ml</span>
+                                <span class="badge-modern">🥤 600 ml</span>
+                            </div>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiYellow text-xl">$145.00 - $180.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-yellow cursor-pointer" onclick="openModal('vaso-florida')">
+                        <div class="product-img-container">
+                            <img data-src="mockupVasoFloridaBellotaBurbuja.png"
+                                data-local-src="img/botellasVasos/mockupVasoFloridaBellotaBurbuja.png"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Vaso Florida</h3>
+                            <p class="text-xs text-gray-500 mb-3 leading-relaxed">Vaso tipo Starbucks de plástico
+                                reutilizable, popote incluido.</p>
+                            <div class="flex justify-center mb-3">
+                                <span class="color-dot bg-green-500"></span><span
+                                    class="color-dot bg-pink-700"></span><span class="color-dot bg-blue-700"></span>
+                            </div>
+                            <div class="flex justify-center gap-2 mb-4">
+                                <span class="badge-modern">🥤 650 ml</span>
+                            </div>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiYellow text-xl">$180.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-yellow cursor-pointer" onclick="openModal('tarro-cristal')">
+                        <div class="product-img-container">
+                            <img data-src="mockupTarroTransLuffy.png"
+                                data-local-src="img/botellasVasos/mockupTarroTransLuffy.png"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Tarro Cervecero Cristal</h3>
+                            <p class="text-xs text-gray-500 mb-4 flex-grow">Cristal pesado, transparente y muy
+                                resistente.</p>
+                            <div class="flex justify-center gap-2 mb-4">
+                                <span class="badge-modern">🍺 16 oz / 473 ml</span>
+                            </div>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiYellow text-xl">$154.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-yellow cursor-pointer" onclick="openModal('tarro-glaseado')">
+                        <div class="product-img-container">
+                            <img data-src="00MOCKUPtarroPumasVsCruzAzul.png"
+                                data-local-src="img/botellasVasos/00MOCKUPtarroPumasVsCruzAzul.png"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Tarro Cervecero Glaseado</h3>
+                            <p class="text-xs text-gray-500 mb-3">Cristal Satinado / Esmerilado premium.</p>
+                            <div class="flex justify-center mb-3">
+                                <span class="color-dot bg-gray-500"></span><span
+                                    class="color-dot bg-green-400"></span><span class="color-dot bg-blue-400"></span>
+                            </div>
+                            <div class="flex justify-center gap-2 mb-4">
+                                <span class="badge-modern">🍺 16 oz / 473 ml</span>
+                            </div>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiYellow text-xl">$159.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-yellow cursor-pointer" onclick="openModal('vaso-fiesta')">
+                        <div class="product-img-container">
+                            <img data-src="mockupVasoAceroFreezer.png"
+                                data-local-src="img/botellasVasos/mockupVasoAceroFreezer.png"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Vaso de Acero (Tipo Fiesta)</h3>
+                            <p class="text-xs text-gray-500 mb-3 leading-relaxed">Vaso tipo rojo de fiesta clásico, pero
+                                en acero inoxidable.</p>
+                            <div class="flex justify-center items-center gap-2 mb-3">
+                                <p class="text-[10px] text-gray-500 uppercase tracking-widest font-semibold m-0">Color:
+                                </p>
+                                <span class="color-dot bg-gray-300"></span><span class="color-dot bg-white"></span>
+                            </div>
+                            <div class="flex justify-center gap-2 mb-4">
+                                <span class="badge-modern">🥤 300 ml</span>
+                            </div>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiYellow text-xl">$232.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <div class="page-break-before"></div>
+
+        <!-- ==========================================
+             SECCIÓN: PLAYERAS Y GORRAS
+             ========================================== -->
+        <section class="mb-14 pt-4 avoid-break-inside product-section">
+            <div class="bg-famiCyan text-white px-5 py-3 rounded-t-xl">
+                <h2 class="text-2xl font-bold uppercase tracking-wider">Playeras y Gorras</h2>
+            </div>
+            <div class="bg-black border-2 border-t-0 border-famiCyan p-5 sm:p-6 rounded-b-xl shadow-xl">
+                <p class="text-sm text-gray-400 mb-6">Técnicas de sublimación (tacto algodón) y DTF Textil (algodón
+                    100%).</p>
+
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 print-2-cols">
+                    <div class="product-card hover-cyan cursor-pointer" onclick="openModal('playera-sublimada')">
+                        <div class="product-img-container">
+                            <img data-src="mockupPlayeraSuperMama01.jpg"
+                                data-local-src="img/playeras/mockupPlayeraSuperMama01.jpg"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Playera Sublimada</h3>
+                            <p class="text-xs text-gray-500 mb-3">Tacto Algodón (Blanca)</p>
+                            <p class="text-[10px] text-gray-500 mb-4 flex-grow">(pregunta por disponibilidad de telas)
+                            </p>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiMagenta text-xl"><span
+                                        class="text-sm font-normal text-gray-400">Desde</span> $153.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-cyan cursor-pointer" onclick="openModal('playera-dtf')">
+                        <div class="product-img-container">
+                            <img data-src="mockupSencilloPlayeraNegra.png"
+                                data-local-src="img/playeras/mockupSencilloPlayeraNegra.png"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Playera DTF</h3>
+                            <p class="text-xs text-gray-500 mb-4 flex-grow">Algodón 100% premium (Cualquier Color de
+                                tela)</p>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiMagenta text-xl"><span
+                                        class="text-sm font-normal text-gray-400">Desde</span> $257.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-cyan cursor-pointer" onclick="openModal('playera-dtf-oversize')">
+                        <div class="product-img-container">
+                            <img data-src="mockupPlayeraPesoPluma.png"
+                                data-local-src="img/playeras/mockupPlayeraPesoPluma.png"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Playera DTF Oversize</h3>
+                            <p class="text-xs text-gray-500 mb-4 flex-grow">Corte amplio moderno, Algodón 100% (Colores)
+                            </p>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiMagenta text-xl"><span
+                                        class="text-sm font-normal text-gray-400">Desde</span> $333.00</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             SECCIÓN: COJINES Y BOLSAS
+             ========================================== -->
+        <section class="mb-14 avoid-break-inside product-section">
+            <div class="bg-famiMagenta text-white px-5 py-3 rounded-t-xl">
+                <h2 class="text-2xl font-bold uppercase tracking-wider">Cojines y Bolsas</h2>
+            </div>
+            <div class="bg-black border-2 border-t-0 border-famiMagenta p-5 sm:p-6 rounded-b-xl shadow-xl">
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 print-2-cols">
+                    <div class="product-card hover-magenta cursor-pointer" onclick="openModal('cojines-cuadrados')">
+                        <div class="product-img-container">
+                            <img data-src="2.jpg" data-local-src="img/cojines/2.jpg" class="w-full h-full object-cover"
+                                loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Cojines Cuadrados</h3>
+                            <p class="text-xs text-gray-500 mb-4 flex-grow">Impresión a doble cara en 40x40cm.</p>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiCyan text-xl">$105.00 - $142.00
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-magenta cursor-pointer" onclick="openModal('dakimakura')">
+                        <div class="product-img-container">
+                            <img data-src="dakimakura(1).jpeg" data-local-src="img/cojines/dakimakura_1.jpeg"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Dakimakura</h3>
+                            <p class="text-xs text-gray-500 mb-4 flex-grow">Funda cuerpo entero de 30x10 cm (Consulta
+                                otras medidas).</p>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiCyan text-xl">$50.00</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             SECCIÓN: OFICINA Y PAPELERÍA
+             ========================================== -->
+        <section class="mb-14 avoid-break-inside product-section">
+            <div class="bg-gray-800 text-white px-5 py-3 rounded-t-xl">
+                <h2 class="text-2xl font-bold uppercase tracking-wider text-famiYellow">Oficina y Papelería</h2>
+            </div>
+            <div class="bg-black border-2 border-t-0 border-gray-800 p-5 sm:p-6 rounded-b-xl shadow-xl">
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 print-2-cols">
+
+                    <div class="product-card hover-yellow cursor-pointer" onclick="openModal('mouse-pads')">
+                        <div class="product-img-container">
+                            <img data-src="mousePadGearsOfWarHD.jpeg"
+                                data-local-src="img/mousePad/mousePadGearsOfWarHD.jpeg"
+                                class="w-full h-full object-cover" loading="lazy">
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Mouse Pads</h3>
+                            <p class="text-xs text-gray-500 mb-2">Antideslizantes</p>
+                            <p class="text-xs text-gray-500 mb-3 flex-grow">Opciones en corte circular o rectangular.
+                            </p>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiYellow text-xl">$90.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PRODUCTO NO DISPONIBLE: Tarjetas -->
+                    <div class="product-card hover-disabled relative">
+                        <div
+                            class="absolute inset-0 z-10 flex items-center justify-center bg-[#0a0a0a]/70 backdrop-blur-[2px]">
+                            <div
+                                class="transform -rotate-12 bg-red-600/90 text-white px-8 py-2 border-y-2 border-red-400/50 shadow-[0_0_20px_rgba(220,38,38,0.5)]">
+                                <span class="font-bold uppercase tracking-widest text-lg">Próximamente</span>
+                            </div>
+                        </div>
+                        <div class="product-img-container grayscale opacity-40">
+                            <div class="w-full h-full flex flex-col items-center justify-center bg-gray-900">
+                                <span class="text-4xl mb-2">🃏</span>
+                                <span class="text-xs text-gray-500">[Imagen pendiente]</span>
+                            </div>
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow grayscale opacity-60">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Tarjetas Personalizadas</h3>
+                            <p class="text-xs text-gray-500 mb-3 flex-grow">Tarjetas de rol (Yu-Gi-Oh!, Pokémon, etc.)
+                                impresas en alta calidad.</p>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-gray-500 text-xl">No disponible</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="page-break-before"></div>
+
+        <!-- ==========================================
+             SECCIÓN: REGALOS Y DECORACIÓN
+             ========================================== -->
+        <section class="mb-14 pt-4 avoid-break-inside product-section">
+            <div class="bg-famiCyan text-white px-5 py-3 rounded-t-xl">
+                <h2 class="text-2xl font-bold uppercase tracking-wider">Regalos y Decoración</h2>
+            </div>
+            <div class="bg-black border-2 border-t-0 border-famiCyan p-5 sm:p-6 rounded-b-xl shadow-xl">
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 print-2-cols">
+
+                    <div class="product-card hover-cyan cursor-pointer" onclick="openModal('pines-58mm')">
+                        <div class="product-img-container">
+                            <img data-src="mockupPinesBTSMetalPlast.png"
+                                data-local-src="img/pines/mockupPinesBTSMetalPlast.png"
+                                class="w-full h-full object-cover" loading="lazy" />
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Pines de 58mm</h3>
+                            <p class="text-xs text-gray-500 mb-3 flex-grow">Fabricados en Plástico de alta duración o
+                                Metálicos brillantes.</p>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiMagenta text-xl">$15.00 - $25.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PRODUCTO NO DISPONIBLE: Rompecabezas -->
+                    <div class="product-card hover-disabled relative">
+                        <div
+                            class="absolute inset-0 z-10 flex items-center justify-center bg-[#0a0a0a]/70 backdrop-blur-[2px]">
+                            <div
+                                class="transform -rotate-12 bg-red-600/90 text-white px-8 py-2 border-y-2 border-red-400/50 shadow-[0_0_20px_rgba(220,38,38,0.5)]">
+                                <span class="font-bold uppercase tracking-widest text-lg">Próximamente</span>
+                            </div>
+                        </div>
+                        <div class="product-img-container grayscale opacity-40">
+                            <div class="w-full h-full flex flex-col items-center justify-center bg-gray-900">
+                                <span class="text-4xl mb-2">🧩</span>
+                                <span class="text-xs text-gray-500">[Imagen pendiente]</span>
+                            </div>
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow grayscale opacity-60">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Rompecabezas Personalizado</h3>
+                            <p class="text-xs text-gray-500 mb-4 flex-grow">MDF o Cartón plastificado brillante.</p>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-gray-500 text-xl">No disponible</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-cyan cursor-pointer" onclick="openModal('porta-retrato-cristal')">
+                        <div class="product-img-container">
+                            <img data-src="mockupPortaretratoCristalVert01.png"
+                                data-local-src="img/portaretratos/mockupPortaretratoCristalVert01.png"
+                                class="w-full h-full object-cover" loading="lazy" />
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Porta Retrato Cristal</h3>
+                            <p class="text-xs text-gray-500 mb-3 flex-grow">Impresión en cristal brillante ultra claro.
+                            </p>
+                            <div class="flex justify-center gap-2 mb-3">
+                                <span class="badge-modern">🖼️ 13 x 23 cm</span>
+                            </div>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiMagenta text-xl">$177.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-cyan cursor-pointer" onclick="openModal('porta-retrato-acrilico')">
+                        <div class="product-img-container">
+                            <img data-src="mockupPortaretratoAcrisub.png"
+                                data-local-src="img/portaretratos/mockupPortaretratoAcrisub.png"
+                                class="w-full h-full object-cover" loading="lazy" />
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Porta Retrato Acrílico</h3>
+                            <p class="text-xs text-gray-500 mb-3 flex-grow">Acrílico ligero y resistente a golpes,
+                                acabado glossy.</p>
+                            <div class="flex justify-center gap-2 mb-3">
+                                <span class="badge-modern">🖼️ 13 x 20 cm</span>
+                            </div>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiMagenta text-xl">$139.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-cyan cursor-pointer" onclick="openModal('porta-retrato-piedra')">
+                        <div class="product-img-container">
+                            <img data-src="mockupPortaretratoPiedra.png"
+                                data-local-src="img/portaretratos/mockupPortaretratoPiedra.png"
+                                class="w-full h-full object-cover" loading="lazy" />
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Porta Retrato de Piedra</h3>
+                            <p class="text-xs text-gray-500 mb-3 flex-grow">Piedra rústica real con superficie frontal
+                                tratada para foto HD.</p>
+                            <div class="flex justify-center gap-2 mb-3">
+                                <span class="badge-modern">15 x 20 cm</span>
+                                <span class="badge-modern">20 x 20 cm</span>
+                            </div>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiMagenta text-xl">$215.00 - $252.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-card hover-cyan cursor-pointer" onclick="openModal('porta-retrato-mdf')">
+                        <div class="product-img-container">
+                            <img data-src="mockupPortaretratoMDF.png"
+                                data-local-src="img/portaretratos/mockupPortaretratoMDF.png"
+                                class="w-full h-full object-cover" loading="lazy" />
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Porta Retrato MDF</h3>
+                            <p class="text-xs text-gray-500 mb-3 flex-grow">Madera MDF sólida con corte láser preciso y
+                                borde biselado.</p>
+                            <div class="flex justify-center gap-2 mb-3">
+                                <span class="badge-modern">15 x 20 cm</span>
+                                <span class="badge-modern">20 x 25 cm</span>
+                            </div>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-famiMagenta text-xl">$142.00 - $180.00</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             SECCIÓN: COJINES Y LLAVEROS
+             ========================================== -->
+        <section class="mb-14 avoid-break-inside product-section">
+            <div class="bg-famiMagenta text-white px-5 py-3 rounded-t-xl">
+                <h2 class="text-2xl font-bold uppercase tracking-wider">Llaveros</h2>
+            </div>
+            <div class="bg-black border-2 border-t-0 border-famiMagenta p-5 sm:p-6 rounded-b-xl shadow-xl">
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 print-2-cols">
+
+                    <!-- PRODUCTO NO DISPONIBLE: Llaveros -->
+                    <div class="product-card hover-disabled relative">
+                        <div
+                            class="absolute inset-0 z-10 flex items-center justify-center bg-[#0a0a0a]/70 backdrop-blur-[2px]">
+                            <div
+                                class="transform -rotate-12 bg-red-600/90 text-white px-8 py-2 border-y-2 border-red-400/50 shadow-[0_0_20px_rgba(220,38,38,0.5)]">
+                                <span class="font-bold uppercase tracking-widest text-lg">Próximamente</span>
+                            </div>
+                        </div>
+                        <div class="product-img-container grayscale opacity-40">
+                            <div class="w-full h-full flex flex-col items-center justify-center bg-gray-900">
+                                <span class="text-4xl mb-2">🔑</span>
+                                <span class="text-xs text-gray-500">[Imagen pendiente]</span>
+                            </div>
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow grayscale opacity-60">
+                            <h3 class="font-bold text-base text-gray-200 mb-1">Llaveros</h3>
+                            <p class="text-xs text-gray-500 mb-3 leading-relaxed">Diseños personalizados en llavero tipo
+                                <b>acrílico</b> de máxima calidad.
+                            </p>
+                            <div class="flex justify-center flex-wrap gap-2 mb-3">
+                                <span class="badge-modern">Cuadrado</span><span
+                                    class="badge-modern">Circular</span><span class="badge-modern">Corazón</span>
+                            </div>
+                            <div class="flex justify-center flex-wrap gap-2 mb-4">
+                                <span class="badge-modern">Rectangular</span><span class="badge-modern">Playera</span>
+                            </div>
+                            <div class="mt-auto pt-4 border-t border-gray-800/50">
+                                <p class="font-bold text-gray-500 text-xl">No disponible</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             PIE DE PÁGINA (Términos)
+             ========================================== -->
+        <footer
+            class="mt-12 pt-8 border-t border-gray-800 text-center text-xs text-gray-500 avoid-break-inside pb-4 bg-black rounded-b-2xl">
+            <p class="font-bold text-gray-400 mb-2 text-sm tracking-wider uppercase">Información de Venta</p>
+            <p class="leading-relaxed">* Tiempo de entrega de 3 a 5 días hábiles (dependiendo del producto)<br>a partir
+                de la confirmación y anticipo.</p>
+            <p class="mt-6 text-[10px] text-gray-600 opacity-60">&copy; 2026 Familia de Papel. Todos los derechos
+                reservados.</p>
+        </footer>
+
+    </div>
+
+    <!-- BOTÓN FLOTANTE DE WHATSAPP -->
+    <a href="https://wa.me/524778124210?text=Hola,%20me%20interesa%20un%20producto%20de%20su%20catálogo%20en%20línea."
+        target="_blank"
+        class="no-print fixed bottom-6 right-6 z-50 bg-[#25D366] text-white px-5 py-3 rounded-full font-bold shadow-[0_0_15px_rgba(37,211,102,0.4)] hover:bg-[#1ebd5a] hover:shadow-[0_0_25px_rgba(37,211,102,0.6)] hover:-translate-y-1 transition-all duration-300 flex items-center gap-2">
+        <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+        </svg>
+        ¡Haz tu pedido por WhatsApp!
+    </a>
+
+    <!-- ==========================================
+     MODAL DE PREVISUALIZACIÓN Y GALERÍA
+     ========================================== -->
+    <div id="productModal"
+        class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 transition-all duration-300 opacity-0 pointer-events-none">
+
+        <div class="bg-[#0a0a0a] border border-gray-800 rounded-2xl w-full max-w-5xl flex flex-col md:flex-row overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] relative transform scale-95 transition-transform duration-300"
+            id="modalContent">
+
+            <!-- Botón de Cerrar -->
+            <button onclick="closeModal()"
+                class="absolute top-4 right-4 text-gray-500 hover:text-white z-10 bg-black/60 rounded-full p-2 backdrop-blur transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+
+            <!-- Contenedor de la Imagen Principal -->
+            <div
+                class="w-full md:w-3/5 h-[40vh] md:h-[75vh] bg-[#050505] flex items-center justify-center p-4 relative group">
+                <!-- Etiqueta dinámica (ej. Foto Real) -->
+                <span id="mainImgBadge"
+                    class="absolute top-4 left-4 bg-famiCyan text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg z-10 hidden"></span>
+
+                <img id="modalMainImg" src="" alt="Vista principal"
+                    class="max-h-full max-w-full object-contain drop-shadow-2xl transition-opacity duration-300">
+            </div>
+
+            <!-- Panel Lateral: Detalles y Miniaturas -->
+            <div
+                class="w-full md:w-2/5 p-6 md:p-8 flex flex-col bg-gradient-to-b from-[#111] to-[#0a0a0a] border-l border-gray-800">
+                <h3 id="modalTitle" class="text-2xl font-extrabold text-white mb-2 leading-tight"></h3>
+                <p id="modalDesc" class="text-sm text-gray-400 mb-6 flex-grow-0"></p>
+
+                <h4
+                    class="text-xs font-bold text-famiCyan uppercase tracking-widest mb-4 border-b border-gray-800 pb-2">
+                    Galería del Producto</h4>
+
+                <!-- Grid de Miniaturas -->
+                <div id="modalThumbnails"
+                    class="grid grid-cols-3 gap-3 overflow-y-auto pr-2 pb-4 flex-grow content-start">
+                    <!-- JavaScript inyectará las miniaturas aquí -->
+                </div>
+
+                <!-- Botón de acción directo -->
+                <div class="mt-4 pt-4 border-t border-gray-800">
+                    <a id="modalWhatsappBtn" href="#" target="_blank"
+                        class="w-full flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1ebd5a] text-white py-3 rounded-xl font-bold transition-colors">
+                        Pedir este modelo
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AQUI ESTÁN TUS ARCHIVOS SCRIPT EXTERNOS -->
+    <script src="cloudinary-optimizer.js"></script>
+    <script src="catalog-modal.js"></script>
+
+</body>
+
+</html>
