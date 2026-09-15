@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             // 2. Intentamos cargar desde Cloudinary primero
-            const cloudinaryUrl = `https://res.cloudinary.com/${cloudName}/image//${transformations}/${fileName}`;
+            const cloudinaryUrl = `https://res.cloudinary.com/${cloudName}/image/upload/${transformations}/${fileName}`;
             img.setAttribute('src', cloudinaryUrl);
         }
     });
