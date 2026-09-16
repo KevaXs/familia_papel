@@ -1,9 +1,6 @@
-// catalog-modal.js
-
-// Ya no declaramos cloudName aquí porque lo toma de cloudinary-optimizer.js
 const cloudBaseUrl = `https://res.cloudinary.com/${cloudName}/image/upload/`;
 
-// Base de datos de tus galerías
+// Base de datos de productos
 const productGallery = {
     // --- TAZAS ---
     "taza-blanca-11oz": {
@@ -11,22 +8,31 @@ const productGallery = {
         desc: "Calidad AAA o AA, la más clásica e ideal para cualquier diseño. Recubrimiento para colores vibrantes.",
         images: [
             { src: "mockupTazaIIPadreFlork1.png", localSrc: "img/tazas/mockupTazaIIPadreFlork1.png", tag: "Diseño" },
-            // Agrega tus fotos reales aquí:
-            // { src: "taza_real_1.jpg", localSrc: "img/tazas/reales/taza_real_1.jpg", tag: "Foto Real" }
+            { src: "tazaDragonBall.png", localSrc: "img/tazas/tazaDragonBall.png", tag: "Foto Real" },
+            { src: "mockupTazaIIIBlancaGTAVI.png", localSrc: "img/tazas/mockupTazaIIIBlancaGTAVI.png", tag: "Diseño" },
+            { src: "mockupTazaIIPadreFlork2.png", localSrc: "img/tazas/mockupTazaIIPadreFlork2.png", tag: "Diseño" },
+            { src: "mockupTazaIIPadreFlork3.png", localSrc: "img/tazas/mockupTazaIIPadreFlork3.png", tag: "Diseño" },
+            { src: "mockupTazaIIPadreFlork4.png", localSrc: "img/tazas/mockupTazaIIPadreFlork4.png", tag: "Diseño" },
+            { src: "mockupTazaIIPadreFlork5.png", localSrc: "img/tazas/mockupTazaIIPadreFlork5.png", tag: "Diseño" },
+            { src: "mockupTazaIIPadreFlork6.png", localSrc: "img/tazas/mockupTazaIIPadreFlork6.png", tag: "Diseño" },
+            { src: "mockupTazaIIIBlancaGtaSA.png", localSrc: "img/tazas/mockupTazaIIIBlancaGtaSA.png", tag: "Diseño" },
+            { src: "mockupTazaIIIBlancaGTAVI.png", localSrc: "img/tazas/mockupTazaIIIBlancaGTAVI.png", tag: "Diseño" }
         ]
     },
     "taza-color": {
         title: "Taza con Color Interior 11 y 15 (oz)",
         desc: "Dale un toque extra combinando el interior con tu diseño. Disponible con y sin cuchara.",
         images: [
-            { src: "mockupTazaIIMinionsIntAzulRojo.png", localSrc: "img/tazas/mockupTazaIIMinionsIntAzulRojo.png", tag: "Diseño" }
+            { src: "mockupTazaIIMinionsIntAzulRojo.png", localSrc: "img/tazas/mockupTazaIIMinionsIntAzulRojo.png", tag: "Diseño" },
+            { src: "tazaVerdeLimaIntExtKiNiNatteruHito.png", localSrc: "img/tazas/tazaVerdeLimaIntExtKiNiNatteruHito.png", tag: "Foto Real" }
         ]
     },
     "taza-magica-mate": {
         title: "Taza Mágica Mate 11oz",
         desc: "El diseño aparece mágicamente al verter agua caliente. Acabado mate.",
         images: [
-            { src: "mockupTazaIIDiaMadres11OzMagMateAzul.png", localSrc: "img/tazas/mockupTazaIIDiaMadres11OzMagMateAzul.png", tag: "Diseño" }
+            { src: "mockupTazaIIDiaMadres11OzMagMateAzul.png", localSrc: "img/tazas/mockupTazaIIDiaMadres11OzMagMateAzul.png", tag: "Diseño" },
+            { src: "mockupTazaIIIBlancaGTAV.png", localSrc: "img/tazas/mockupTazaIIIBlancaGTAV.png", tag: "Diseño" }
         ]
     },
     "taza-magica-semi": {
@@ -54,7 +60,8 @@ const productGallery = {
         title: "Taza Acero 12oz",
         desc: "Estilo peltre vintage (Colores: Blanco y Plata).",
         images: [
-            { src: "mockupTazaIICocaAluminio.png", localSrc: "img/tazas/mockupTazaIICocaAluminio.png", tag: "Diseño" }
+            { src: "mockupTazaIICocaAluminio.png", localSrc: "img/tazas/mockupTazaIICocaAluminio.png", tag: "Diseño" },
+            { src: "mockupTazaIII12OzAluminioGtaVI2.png", localSrc: "img/tazas/mockupTazaIII12OzAluminioGtaVI2.png", tag: "Diseño" }
         ]
     },
     "taza-aluminio-asa": {
@@ -89,14 +96,16 @@ const productGallery = {
         title: "Taza Acero Doble Pared 300ml",
         desc: "Conserva la temperatura (Blanco y Plata).",
         images: [
-            { src: "mockupTazaIIDbGtAluminioDblPred.png", localSrc: "img/tazas/mockupTazaIIDbGtAluminioDblPred.png", tag: "Diseño" }
+            { src: "mockupTazaIIDbGtAluminioDblPred.png", localSrc: "img/tazas/mockupTazaIIDbGtAluminioDblPred.png", tag: "Diseño" },
+            { src: "mockupTazaIIIAceroDPGTAVChicaBk.png", localSrc: "img/tazas/mockupTazaIIIAceroDPGTAVChicaBk.png", tag: "Diseño" }
         ]
     },
     "taza-perlada": {
         title: "Tazas Perladas 11Oz",
         desc: "Destellos sutiles tipo perla.",
         images: [
-            { src: "mockupTazaIIFma11OzPerlado.png", localSrc: "img/tazas/mockupTazaIIFma11OzPerlado.png", tag: "Diseño" }
+            { src: "mockupTazaIIFma11OzPerlado.png", localSrc: "img/tazas/mockupTazaIIFma11OzPerlado.png", tag: "Diseño" },
+            { src: "mockupTazaIIIPerlaRAGTAVI1.png", localSrc: "img/tazas/mockupTazaIIIPerlaRAGTAVI1.png", tag: "Diseño" }
         ]
     },
 
@@ -113,6 +122,17 @@ const productGallery = {
         desc: "Base de corcho antideslizante y diseño elegante.",
         images: [
             { src: "termoMario.jpeg", localSrc: "img/termos/termoMario.jpeg", tag: "Diseño" }
+        ]
+    },
+    "termo-grabado-grande": {
+        title: "Termo Acero Negro",
+        desc: "Termo grabado a láser con popote y su espoja para limpiar (varios colores).",
+        images: [
+            { src: "termoGrandeMockupGrabadoBTSNegro.png", localSrc: "img/termos/termoGrandeMockupGrabadoBTSNegro.png", tag: "Diseño" },
+            { src: "termoGrandeMockupGrabadoBTSAzulRosaVer3.png", localSrc: "img/termos/termoGrandeMockupGrabadoBTSAzulRosaVer3.png", tag: "Diseño" },
+            { src: "termoGrandeMockupGrabadoBTSVerde.png", localSrc: "img/termos/termoGrandeMockupGrabadoBTSVerde.png", tag: "Diseño" },
+            { src: "termoGrabadoLaserNegroGTAVIReal.png", localSrc: "img/termos/termoGrabadoLaserNegroGTAVIReal.png", tag: "Foto Real" },
+            { src: "termoGrabadoStarWarsReal.png", localSrc: "img/termos/termoGrabadoStarWarsReal.png", tag: "Foto Real" }
         ]
     },
     "termo-skinny": {
@@ -198,7 +218,8 @@ const productGallery = {
         title: "Botella Aluminio Color",
         desc: "Tapón de colores removible.",
         images: [
-            { src: "termoJennie.png", localSrc: "img/botellasVasos/termoJennie.png", tag: "Diseño" }
+            { src: "termoJennie.png", localSrc: "img/botellasVasos/termoJennie.png", tag: "Diseño" },
+            { src: "botellaHmgStudioReal.png", localSrc: "img/botellasVasos/botellaHmgStudioReal.png", tag: "Foto Real" }
         ]
     },
     "botella-caribe": {
@@ -226,7 +247,8 @@ const productGallery = {
         title: "Vaso Florida",
         desc: "Vaso tipo Starbucks de plástico reutilizable, popote incluido. 650ml.",
         images: [
-            { src: "mockupVasoFloridaBellotaBurbuja.png", localSrc: "img/botellasVasos/mockupVasoFloridaBellotaBurbuja.png", tag: "Diseño" }
+            { src: "mockupVasoFloridaBellotaBurbuja.png", localSrc: "img/botellasVasos/mockupVasoFloridaBellotaBurbuja.png", tag: "Diseño" },
+            { src: "vasoFloridaPokeBarReal.png", localSrc: "img/botellasVasos/vasoFloridaPokeBarReal.png", tag: "Foto Real" }
         ]
     },
     "tarro-cristal": {
@@ -240,7 +262,21 @@ const productGallery = {
         title: "Tarro Cervecero Glaseado",
         desc: "Cristal Satinado / Esmerilado premium. 16oz.",
         images: [
-            { src: "00MOCKUPtarroPumasVsCruzAzul.png", localSrc: "img/botellasVasos/00MOCKUPtarroPumasVsCruzAzul.png", tag: "Diseño" }
+            { src: "00MOCKUPtarroPumasVsCruzAzul.png", localSrc: "img/botellasVasos/00MOCKUPtarroPumasVsCruzAzul.png", tag: "Diseño" },
+            { src: "00MOCKUPtarroAmericapng.png", localSrc: "img/botellasVasos/00MOCKUPtarroAmericapng.png", tag: "Diseño" },
+            { src: "00MOCKUPtarroAtlas.png", localSrc: "img/botellasVasos/00MOCKUPtarroAtlas.png", tag: "Diseño" },
+            { src: "00MOCKUPtarroChivas.png", localSrc: "img/botellasVasos/00MOCKUPtarroChivas.png", tag: "Diseño" },
+            { src: "00MOCKUPtarroCruzAzul.png", localSrc: "img/botellasVasos/00MOCKUPtarroCruzAzul.png", tag: "Diseño" },
+            { src: "00MOCKUPtarroDuff.png", localSrc: "img/botellasVasos/00MOCKUPtarroDuff.png", tag: "Diseño" },
+            { src: "00MOCKUPtarroHomero.png", localSrc: "img/botellasVasos/00MOCKUPtarroHomero.png", tag: "Diseño" },
+            { src: "00MOCKUPtarroLeon.png", localSrc: "img/botellasVasos/00MOCKUPtarroLeon.png", tag: "Diseño" },
+            { src: "00MOCKUPtarroMoes.png", localSrc: "img/botellasVasos/00MOCKUPtarroMoes.png", tag: "Diseño" },
+            { src: "00MOCKUPtarroMonterrey.png", localSrc: "img/botellasVasos/00MOCKUPtarroMonterrey.png", tag: "Diseño" },
+            { src: "00MOCKUPtarroQueretaro.png", localSrc: "img/botellasVasos/00MOCKUPtarroQueretaro.png", tag: "Diseño" },
+            { src: "00MOCKUPtarroSantos.png", localSrc: "img/botellasVasos/00MOCKUPtarroSantos.png", tag: "Diseño" },
+            { src: "00MOCKUPtarroTijuana.png", localSrc: "img/botellasVasos/00MOCKUPtarroTijuana.png", tag: "Diseño" },
+            { src: "00MOCKUPtarroToluca.png", localSrc: "img/botellasVasos/00MOCKUPtarroToluca.png", tag: "Diseño" },
+            { src: "00MOCKUPtarroPumas.png", localSrc: "img/botellasVasos/00MOCKUPtarroPumas.png", tag: "Diseño" }
         ]
     },
     "vaso-fiesta": {
@@ -286,7 +322,7 @@ const productGallery = {
         title: "Dakimakura",
         desc: "Funda cuerpo entero de 30x10 cm (Consulta otras medidas).",
         images: [
-            { src: "dakimakura(1).jpeg", localSrc: "img/cojines/dakimakura_1.jpeg", tag: "Diseño" } // Nota: Asegúrate de que el nombre del archivo local es correcto.
+            { src: "dakimakura_1.jpeg", localSrc: "img/cojines/dakimakura_1.jpeg", tag: "Diseño" }
         ]
     },
 
@@ -337,51 +373,46 @@ const productGallery = {
     }
 };
 
+// 1. Elementos del DOM
 const modal = document.getElementById('productModal');
 const modalContent = document.getElementById('modalContent');
 const mainImg = document.getElementById('modalMainImg');
 const mainImgBadge = document.getElementById('mainImgBadge');
 
+// 2. Controladores del Modal
 function openModal(productId) {
     const data = productGallery[productId];
-    if (!data) return; // Evita errores si el ID no existe en el diccionario
+    if (!data) return;
 
-    // 1. Llenar los textos
     document.getElementById('modalTitle').textContent = data.title;
     document.getElementById('modalDesc').textContent = data.desc;
     
-    // Configurar botón de WhatsApp
     const wsText = encodeURIComponent(`Hola, me interesa el producto: ${data.title}`);
     document.getElementById('modalWhatsappBtn').href = `https://wa.me/524778124210?text=${wsText}`;
 
-    // 2. Limpiar miniaturas anteriores
     const thumbContainer = document.getElementById('modalThumbnails');
     thumbContainer.innerHTML = '';
 
-    // 3. Generar la galería con el PLAN B
     data.images.forEach((imgData, index) => {
         const thumbUrl = `${cloudBaseUrl}f_auto,q_auto,w_200,c_fill,ar_1:1/${imgData.src}`;
         const largeUrl = `${cloudBaseUrl}f_auto,q_auto,w_1000,c_limit/${imgData.src}`;
 
         const thumbEl = document.createElement('img');
         
-        // --- PLAN B PARA LA MINIATURA ---
+        // Plan B: Error de carga de Cloudinary
         thumbEl.onerror = function() {
-            console.warn(`Miniatura falló en Cloudinary. Cargando local: ${imgData.localSrc}`);
-            this.onerror = null; // Previene bucle infinito
+            this.onerror = null;
             this.src = imgData.localSrc;
         };
         
         thumbEl.src = thumbUrl;
         thumbEl.className = "w-full h-24 object-cover rounded-lg cursor-pointer border-2 border-transparent hover:border-famiCyan transition-colors";
         
-        // Si es la primera imagen, la ponemos como principal
         if (index === 0) {
             setMainImage(largeUrl, imgData.localSrc, imgData.tag);
             thumbEl.classList.add('border-famiCyan'); 
         }
 
-        // Evento click de la miniatura
         thumbEl.onclick = () => {
             setMainImage(largeUrl, imgData.localSrc, imgData.tag);
             Array.from(thumbContainer.children).forEach(child => {
@@ -395,7 +426,7 @@ function openModal(productId) {
         thumbContainer.appendChild(thumbEl);
     });
 
-    // 4. Animación de apertura
+    // Animación de entrada
     modal.classList.remove('hidden');
     setTimeout(() => {
         modal.classList.remove('opacity-0', 'pointer-events-none');
@@ -410,10 +441,8 @@ function openModal(productId) {
 function setMainImage(cloudUrl, localUrl, tag) {
     mainImg.style.opacity = 0; 
     setTimeout(() => {
-        
-        // --- PLAN B PARA LA IMAGEN PRINCIPAL ---
+        // Plan B: Error de carga de Cloudinary
         mainImg.onerror = function() {
-            console.warn(`Imagen principal falló en Cloudinary. Cargando local: ${localUrl}`);
             this.onerror = null;
             this.src = localUrl;
         };
@@ -421,7 +450,6 @@ function setMainImage(cloudUrl, localUrl, tag) {
         mainImg.src = cloudUrl;
         mainImg.style.opacity = 1;
         
-        // Configurar la etiqueta dinámica
         if (tag) {
             mainImgBadge.textContent = tag;
             mainImgBadge.classList.remove('hidden');
@@ -448,6 +476,7 @@ function closeModal() {
     }, 300);
 }
 
+// Cierre al dar clic afuera
 modal.addEventListener('click', (e) => {
     if (e.target === modal) {
         closeModal();
