@@ -306,7 +306,12 @@ const productGallery = {
         title: "Playera DTF Oversize",
         desc: "Corte amplio moderno, Algodón 100% (Colores).",
         images: [
-            { src: "mockupPlayeraPesoPluma.png", localSrc: "img/playeras/mockupPlayeraPesoPluma.png", tag: "Diseño" }
+            { src: "mockupPlayeraPesoPluma.png", localSrc: "img/playeras/mockupPlayeraPesoPluma.png", tag: "Diseño" },
+            { src: "mockupPlayeraNata.png", localSrc: "img/playeras/mockupPlayeraNata.png", tag: "Diseño" },
+            { src: "mockupPlayeraFreezer.png", localSrc: "img/playeras/mockupPlayeraFreezer.png", tag: "Diseño" },
+            { src: "mockupPlayeraGTAVIViceCity.png", localSrc: "img/playeras/mockupPlayeraGTAVIViceCity.png", tag: "Diseño" },
+            { src: "playeraOversizedNegraCROComp.png", localSrc: "img/playeras/playeraOversizedNegraCROComp.png", tag: "Foto Real" },
+            { src: "mockupPlayeraBadBunny.png", localSrc: "img/playeras/mockupPlayeraBadBunny.png", tag: "Diseño" }
         ]
     },
 
@@ -331,7 +336,12 @@ const productGallery = {
         title: "Mouse Pads",
         desc: "Antideslizantes. Opciones en corte circular o rectangular.",
         images: [
-            { src: "mousePadGearsOfWarHD.jpeg", localSrc: "img/mousePad/mousePadGearsOfWarHD.jpeg", tag: "Diseño" }
+            { src: "mousePadGearsOfWarHD.jpeg", localSrc: "img/mousePad/mousePadGearsOfWarHD.jpeg", tag: "Foto Real" },
+            { src: "residentEvilRequiemGrace.png", localSrc: "img/mousePad/residentEvilRequiemGrace.png", tag: "Foto Real" },
+            { src: "residentEvilRequiemGraceVer2.png", localSrc: "img/mousePad/residentEvilRequiemGraceVer2.png", tag: "Foto Real" },
+            { src: "residentEvilRequiemLeon.png", localSrc: "img/mousePad/residentEvilRequiemLeon.png", tag: "Foto Real" },
+            { src: "residentEvilRequiemVer1.png", localSrc: "img/mousePad/mousePadGearsOfWarHD.png", tag: "Foto Real" },
+            { src: "mockupMousepadGtaVI.jpeg", localSrc: "img/mousePad/mockupMousepadGtaVI.jpeg", tag: "Diseño" }
         ]
     },
 
@@ -340,7 +350,8 @@ const productGallery = {
         title: "Pines de 58mm",
         desc: "Fabricados en Plástico de alta duración o Metálicos brillantes.",
         images: [
-            { src: "mockupPinesBTSMetalPlast.png", localSrc: "img/pines/mockupPinesBTSMetalPlast.png", tag: "Diseño" }
+            { src: "mockupPinesBTSMetalPlast.png", localSrc: "img/pines/mockupPinesBTSMetalPlast.png", tag: "Diseño", },
+            { src: "mockupPinesGTAVIMetalPlast.png", localSrc: "img/pines/mockupPinesGTAVIMetalPlast.png", tag: "Diseño" }
         ]
     },
     "porta-retrato-cristal": {
