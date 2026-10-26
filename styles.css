@@ -1,0 +1,93 @@
+:root {
+    --acc: #009fe3
+}
+
+[x-cloak] {
+    display: none !important
+}
+
+html {
+    scroll-behavior: smooth
+}
+
+.no-scrollbar {
+    scrollbar-width: none
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none
+}
+
+/* Desajuste de registro de impresión (cian/magenta) en el título principal */
+.misreg {
+    text-shadow: -3px 0 rgb(0 159 227/.85), 3px 0 rgb(227 0 123/.85)
+}
+
+.fade {
+    animation: fade .4s ease both
+}
+
+@keyframes fade {
+    from {
+        opacity: 0
+    }
+}
+
+.card {
+    transition: transform .35s cubic-bezier(.2, .8, .2, 1), box-shadow .35s, border-color .35s;
+    animation: fade .5s ease both
+}
+
+@media(hover:hover) {
+
+    .card:not(.off):hover,
+    .card:not(.off):focus-visible {
+        transform: translateY(-8px);
+        border-color: var(--acc);
+        box-shadow: 0 22px 40px -18px var(--acc)
+    }
+}
+
+@media(prefers-reduced-motion:reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important
+    }
+}
+
+@page {
+    size: A4;
+    margin: 10mm
+}
+
+@media print {
+    * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact
+    }
+
+    body {
+        background: #000 !important
+    }
+
+    .no-print {
+        display: none !important
+    }
+
+    .print-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important
+    }
+
+    .card {
+        break-inside: avoid;
+        animation: none;
+        box-shadow: none
+    }
+
+    h2 {
+        break-after: avoid
+    }
+}
